@@ -118,15 +118,20 @@ async function loadActivityData(pilotId, startDate, endDate) {
   return activityDataByType;
 }
 
-function formatActivityData(activityData) {
-  const text = [];
+async function formatActivityData(pilotId, activityData) {
+  const { data: pilotJSON } = await axios.get(`http://tc.emperorshammer.org/api/pilot/${pilotId}`);
+  const title = `${pilotJSON.label} #${pilotJSON.PIN}`;
+  const underline = "".padStart(title.length, "=");
+
+  const text = [`${title}\n${underline}\n`];
 
   Object.keys(activityData).forEach((activityType) => {
     text.push(`${activityType}:`);
+
     if (activityType === "MEDALS_AWARDED") {
-      text.push(Object.keys(activityData[activityType]).map((medal) => `* ${medal} x ${activityData[activityType][medal]}`).join('\n'));
+      text.push(Object.keys(activityData[activityType]).map((medal) => `* ${medal} x ${activityData[activityType][medal]}`).join('\n') + '\n');
     } else {
-      text.push(activityData[activityType].map((a) => `* [${a.date}] ${a.activityString}`).join('\n'));
+      text.push(activityData[activityType].map((a) => `* [${a.date}] ${a.activityString}`).join('\n') + '\n');
     }
   }, []);
 
@@ -174,6 +179,7 @@ export default async (req, res) => {
       activity: activityData,
     });
   } else {
-    res.send(formatActivityData(activityData));
+    const text = await formatActivityData(pilotId, activityData);
+    res.send(text);
   }
 }
