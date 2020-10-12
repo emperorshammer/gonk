@@ -70,7 +70,7 @@ async function loadActivityData(pilotId, startDate, endDate) {
       return;
     }
 
-    const isoDateString = date.toISOString();
+    const isoDateString = date.toDateString();
 
     if (startDate && startDate > date) {
       return;
