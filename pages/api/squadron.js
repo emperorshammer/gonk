@@ -4,25 +4,6 @@ import axios from 'axios';
 import cheerio from 'cheerio';
 import { parseStringPromise } from 'xml2js';
 
-const RANKS = {
-  1: 'CT',
-  2: 'SL',
-  3: 'LT',
-  4: 'LCM',
-  5: 'CM',
-  6: 'CPT',
-  7: 'MAJ',
-  8: 'LC',
-  9: 'COL',
-  10: 'GN',
-};
-
-const POSITIONS = {
-  2: 'FM',
-  3: 'FL',
-  4: 'CMDR',
-};
-
 export default async (req, res) => {
   const { url } = req;
   const { squadronId } = qs.parse(url.split("?")[1]);
@@ -47,36 +28,38 @@ export default async (req, res) => {
   });
 
   const pilotData = await Promise.all(pilotPins.map(async (pin) => {
-    const { data: pilotXML } = await axios.get(`https://tc.emperorshammer.org/TTT2backend.php?pin=${pin}`);
+    const { data: pilotJSON } = await axios.get(`http://tc.emperorshammer.org/api/pilot/${pin}`);
 
-    const pilotData = await parseStringPromise(pilotXML);
-    const pilot = pilotData.item.personnel[0];
+    const {
+      name,
+      rank,
+      label,
+      position,
+      idLine,
+      FCHG,
+      CR,
+      PvE,
+    } = pilotJSON;
 
-    return pilot;
-  }));
-
-  const formattedData = pilotData.reduce((acc, pilotData) => {
-    const { name } = pilotData;
-    const rank = RANKS[pilotData.rank];
-    const position = POSITIONS[pilotData.position];
-
-    const squadronPosition = new RegExp(`\\\[(\\\d+)\\\] ${rank} ${name}`, "gm").exec(flights.text())[1] * 1 - 1;
+    const squadronPosition = new RegExp(`\\\[(\\\d+)\\\] ${label}`, "gm").exec(flights.text())[1] * 1 - 1;
     const flight = ((squadronPosition / 4) >> 0) + 1;
     const flightPosition = squadronPosition - ((flight - 1) * 4) + 1;
 
     return {
-    ...acc,
-      [[pilotData.pid]]: {
-        name,
-        rank,
-        position,
-        flight,
-        flightPosition,
-        pin: pilotData.pid[0],
-      },
-    }
-  }, {});
+      name,
+      rank,
+      label,
+      pin,
+      flight,
+      flightPosition,
+      position,
+      idLine,
+      FCHG,
+      CR,
+      PvE,
+    };
+  }));
 
-  res.statusCode = 200
-  res.json(formattedData)
+  res.statusCode = 200;
+  res.json(pilotData);
 }
