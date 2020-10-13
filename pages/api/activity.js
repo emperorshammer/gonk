@@ -7,7 +7,7 @@ import { parseStringPromise } from 'xml2js';
 
 const REGEXES = {
   MEDAL_AWARDED: /^Medal awarded : [^\(]+ \((?<medalShorthand>.+)\)/,
-  MEDALS_AWARDED: /^Medals awarded : (?<medalQty>\d+) [^\(]+ \((?<medalShorthand>.+)s\)/,
+  MEDALS_AWARDED: /^Medals awarded : (?<qty>\d+) [^\(]+ \((?<medalShorthand>.+)s\)/,
   BATTLE_COMPLETED: /^Battle completed : (?<battleType>\S+) (?<battleId>\d+)/,
   SUBMITTED_BATTLE_REVIEW: /^Submitted review for battle (?<battleType>\S+) (?<battleId>\d+)/,
   IU_COMPLETED: /^IU Course added to Academic Record by the SOO : \[(?<iuCourse>[^\(]+)]/,
@@ -51,7 +51,12 @@ async function loadActivityData(pilotId, startDate, endDate) {
 
   const $ = cheerio.load(html);
 
-  const activityRows = $('body > center > table > tbody > tr > td:nth-child(2) > p:nth-child(6) > table:nth-child(2) > tbody > tr > td > table > tbody > tr > td:nth-child(1) > table:nth-child(4) tr');
+  let activityRows = $('body > center > table > tbody > tr > td:nth-child(2) > p:nth-child(6) > table:nth-child(2) > tbody > tr > td > table > tbody > tr > td:nth-child(1) > table:nth-child(4) tr');
+
+  // Sometimes the page is different. I dunno
+  if (!activityRows.length) {
+    activityRows = $('body > center > table > tbody > tr > td:nth-child(2) > p:nth-child(6) > table:nth-child(2) > tbody > tr > td > table > tbody > tr > td:nth-child(1) > table:nth-child(2) tr');
+  }
 
   const activityData = [];
 
@@ -109,10 +114,13 @@ async function loadActivityData(pilotId, startDate, endDate) {
 
   // Combine medals by type
   if (activityDataByType.MEDALS_AWARDED) {
-    activityDataByType.MEDALS_AWARDED = activityDataByType.MEDALS_AWARDED.reduce((acc, medal) => ({
-      ...acc,
-      [medal.medalShorthand]: acc[medal.medalShorthand] ? acc[medal.medalShorthand] + 1 : 1,
-    }), {});
+    activityDataByType.MEDALS_AWARDED = activityDataByType.MEDALS_AWARDED.reduce((acc, medal) => {
+      console.log(medal);
+      return {
+        ...acc,
+        [medal.medalShorthand]: acc[medal.medalShorthand] ? acc[medal.medalShorthand] + (medal.qty * 1) : medal.qty * 1,
+      };
+    }, {});
   }
 
   return activityDataByType;
