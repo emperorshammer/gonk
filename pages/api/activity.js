@@ -5,9 +5,12 @@ import cheerio from 'cheerio';
 import { omit } from 'lodash';
 import { parseStringPromise } from 'xml2js';
 
+
+// TODO fix LoC / LoS parsing
+
 const REGEXES = {
   MEDAL_AWARDED: /^Medal awarded : [^\(]+ \((?<medalShorthand>.+)\)/,
-  MEDALS_AWARDED: /^Medals awarded : (?<qty>\d+) [^\(]+ \((?<medalShorthand>.+)s\)/,
+  MEDALS_AWARDED: /^Medals awarded : (?<qty>\d+) [^\(]+ \((?<medalShorthand>.+)s?\)/,
   BATTLE_COMPLETED: /^Battle completed : (?<battleType>\S+) (?<battleId>\d+)/,
   SUBMITTED_BATTLE_REVIEW: /^Submitted review for battle (?<battleType>\S+) (?<battleId>\d+)/,
   IU_COMPLETED: /^IU Course added to Academic Record by the SOO : \[(?<iuCourse>[^\(]+)]/,
@@ -16,6 +19,7 @@ const REGEXES = {
   NEW_COMPETITION: /^Submitted competition approved : ID# (?<competitionId>\d+)/,
   NEW_REPORT: /^Submitted a new (?<reportType>.*) report/,
   NEW_FCHG: /^New Fleet Commander's Honor Guard rank achieved : (?<fchg>\S+)/,
+  NEW_COOP_RATING: /New COOP\/PVE Rating achieved : (?<rating>\S+)/,
   NEW_PROMOTION: /^New promotion : .* \((?<rankShorthand>\S+)\)/,
   NEW_UNIFORM_APPROVED: /^New uniform upload approved/,
   DELETED_UNIFORM: /^Deleted previously approved uniform/,
@@ -115,10 +119,16 @@ async function loadActivityData(pilotId, startDate, endDate) {
   // Combine medals by type
   if (activityDataByType.MEDALS_AWARDED) {
     activityDataByType.MEDALS_AWARDED = activityDataByType.MEDALS_AWARDED.reduce((acc, medal) => {
-      console.log(medal);
+      let { medalShorthand, qty } = medal;
+      qty = qty * 1;
+
+      if (qty > 1) {
+        medalShorthand = medalShorthand.slice(0, medalShorthand.length - 1);
+      }
+
       return {
         ...acc,
-        [medal.medalShorthand]: acc[medal.medalShorthand] ? acc[medal.medalShorthand] + (medal.qty * 1) : medal.qty * 1,
+        [medalShorthand]: acc[medalShorthand] ? acc[medalShorthand] + qty : qty,
       };
     }, {});
   }
