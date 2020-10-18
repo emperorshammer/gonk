@@ -5,6 +5,18 @@ import cheerio from 'cheerio';
 import { omit } from 'lodash';
 import { parseStringPromise } from 'xml2js';
 
+import Cors from 'cors';
+import initMiddleware from '../../lib/initMiddleware';
+
+// Initialize the cors middleware
+const cors = initMiddleware(
+  // You can read more about the available options here: https://github.com/expressjs/cors#configuration-options
+  Cors({
+    // Only allow requests with GET, POST and OPTIONS
+    methods: ['GET', 'POST', 'OPTIONS'],
+  })
+)
+
 
 // TODO fix LoC / LoS parsing
 
@@ -79,18 +91,20 @@ async function loadActivityData(pilotId, startDate, endDate) {
       return;
     }
 
-    const isoDateString = date.toDateString();
+    date.setHours(-1 * date.getUTCHours(), 0, 0, 0);
 
     if (startDate && startDate > date) {
       return;
     }
 
+    // enddate is 2020-10-17
+    // date is 2020-10-17
     if (endDate && endDate < date) {
       return;
     }
 
     activityData.push({
-      date: isoDateString,
+      date: date.toISOString(),
       ...activityTypeByString(activityString),
     });
   });
@@ -157,6 +171,8 @@ async function formatActivityData(pilotId, activityData) {
 }
 
 export default async (req, res) => {
+  await cors(req, res);
+
   const { url } = req;
 
   const {
