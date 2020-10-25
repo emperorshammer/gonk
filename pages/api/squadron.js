@@ -43,7 +43,7 @@ export default async (req, res) => {
   });
 
   const pilotData = await Promise.all(pilotPins.map(async (pin) => {
-    const { data: pilotJSON } = await axios.get(`http://tc.emperorshammer.org/api/pilot/${pin}`);
+    const { data: pilotJSON } = await axios.get(`http://api.emperorshammer.org/pilot/${pin}`);
 
     const {
       name,

@@ -151,7 +151,7 @@ async function loadActivityData(pilotId, startDate, endDate) {
 }
 
 async function formatActivityData(pilotId, activityData) {
-  const { data: pilotJSON } = await axios.get(`http://tc.emperorshammer.org/api/pilot/${pilotId}`);
+  const { data: pilotJSON } = await axios.get(`http://api.emperorshammer.org/pilot/${pilotId}`);
   const title = `${pilotJSON.label} #${pilotJSON.PIN}`;
   const underline = "".padStart(title.length, "=");
 
