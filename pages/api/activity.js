@@ -63,23 +63,38 @@ function activityTypeByString(activityString) {
   };
 }
 
-async function loadActivityData(pilotId, startDate, endDate, page, pageSize) {
+async function paginateActivityData(pilotId, startDate, endDate, page = 1) {
   const url = `https://api.emperorshammer.org/atr/${pilotId}`;
 
   const params = {
-    ...(page ? { page } : {}),
-    ...(pageSize ? { pageSize } : {}),
+    page,
     ...(startDate ? { startDate } : {}),
     ...(endDate ? { endDate } : {}),
   };
 
   const { data: activity } = await request({ url, params });
 
-  if (!activity || !activity.activity) {
+  // Load no more than 20 pages of results to keep things from falling apart
+  if (activity.hasMore && page < 20) {
+    const nextPageData = await paginateActivityData(pilotId, startDate, endDate, page + 1);
+
+    return [
+      ...activity.activity,
+      ...nextPageData,
+    ];
+  }
+
+  return activity.activity || [];
+}
+
+async function loadActivityData(pilotId, startDate, endDate) {
+  const activity = await paginateActivityData(pilotId, startDate, endDate);
+
+  if (!activity) {
     return [];
   }
 
-  const activityData = activity.activity.map(({ date, activity }) => ({
+  const activityData = activity.map(({ date, activity }) => ({
     activity: {
       ...activityTypeByString(activity),
       date: (new Date(date * 1000)),
@@ -124,10 +139,10 @@ async function loadActivityData(pilotId, startDate, endDate, page, pageSize) {
     }, {});
   }
 
-  return { activityData: activityDataByType, hasMore: activity.hasMore };
+  return activityDataByType;
 }
 
-async function formatActivityData(pilotId, activityData, hasMore) {
+async function formatActivityData(pilotId, activityData) {
   const { data: pilotJSON } = await request({ url: `http://api.emperorshammer.org/pilot/${pilotId}` });
   const title = `${pilotJSON.label} #${pilotJSON.PIN}`;
   const underline = "".padStart(title.length, "=");
@@ -144,10 +159,6 @@ async function formatActivityData(pilotId, activityData, hasMore) {
     }
   }, []);
 
-  if (hasMore) {
-    text.push("===More results on next page===");
-  }
-
   return text.join('\n');
 }
 
@@ -161,21 +172,18 @@ export default async (req, res) => {
     startDate,
     endDate,
     format = "json",
-    page = 1,
-    pageSize = 50,
   } = qs.parse(url.split("?")[1]);
 
-  const { activityData, hasMore } = await loadActivityData(pilotId, startDate, endDate, page, pageSize);
+  const activityData = await loadActivityData(pilotId, startDate, endDate);
 
   res.statusCode = 200;
 
   if (format === "json") {
     res.json({
       activity: activityData,
-      hasMore,
     });
   } else {
-    const text = await formatActivityData(pilotId, activityData, hasMore);
+    const text = await formatActivityData(pilotId, activityData);
     res.send(text);
   }
 }
