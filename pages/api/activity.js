@@ -124,10 +124,10 @@ async function loadActivityData(pilotId, startDate, endDate, page, pageSize) {
     }, {});
   }
 
-  return activityDataByType;
+  return { activityData: activityDataByType, hasMore: activity.hasMore };
 }
 
-async function formatActivityData(pilotId, activityData) {
+async function formatActivityData(pilotId, activityData, hasMore) {
   const { data: pilotJSON } = await request({ url: `http://api.emperorshammer.org/pilot/${pilotId}` });
   const title = `${pilotJSON.label} #${pilotJSON.PIN}`;
   const underline = "".padStart(title.length, "=");
@@ -143,6 +143,10 @@ async function formatActivityData(pilotId, activityData) {
       text.push(activityData[activityType].map((a) => `* [${a.date.toDateString()}] ${a.activityString}`).join('\n') + '\n');
     }
   }, []);
+
+  if (hasMore) {
+    text.push("===More results on next page===");
+  }
 
   return text.join('\n');
 }
@@ -161,16 +165,17 @@ export default async (req, res) => {
     pageSize = 50,
   } = qs.parse(url.split("?")[1]);
 
-  const activityData = await loadActivityData(pilotId, startDate, endDate, page, pageSize);
+  const { activityData, hasMore } = await loadActivityData(pilotId, startDate, endDate, page, pageSize);
 
   res.statusCode = 200;
 
   if (format === "json") {
     res.json({
       activity: activityData,
+      hasMore,
     });
   } else {
-    const text = await formatActivityData(pilotId, activityData);
+    const text = await formatActivityData(pilotId, activityData, hasMore);
     res.send(text);
   }
 }
