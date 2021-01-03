@@ -17,19 +17,23 @@ const cors = initMiddleware(
 
 
 // TODO fix LoC / LoS parsing
+// unknown:
+//* [Sat Dec 19 2020]  CE ID# 156 - [SWS]
+// * [Wed Nov 11 2020] New Fleet Commander\'s Honor Guard rank achieved : Cavalier [CAVL]
 
 const REGEXES = {
-  COMBAT_EVENT_PARTICIPATION: /Combat event participation added to Combat Record by the COO : .*id=(?<eventId>\d+).*">(?<eventString>.*)<\/a>/,
+  COMBAT_EVENT_PARTICIPATION: /Combat event participation added to Combat Record by the COO : CE ID# (?<eventId>\d+)/,
   MEDAL_AWARDED: /^Medal awarded : [^\(]+ \((?<medalShorthand>.+)\)/,
   MEDALS_AWARDED: /^Medals awarded : (?<qty>\d+) [^\(]+ \((?<medalShorthand>.+)s?\)/,
-  BATTLE_COMPLETED: /^Battle completed : .*id=(?<battleId>\d+).*">(?<battleType>.*)</,
+  BATTLE_COMPLETED: /^Battle completed : (?<battleType>\S+) (?<battleId>\d+)/,
   SUBMITTED_BATTLE_REVIEW: /^Submitted review for battle (?<battleType>\S+) (?<battleId>\d+)/,
-  IU_COMPLETED: /^IU Course added to Academic Record by the SOO : \[(?<iuCourse>[^\(]+)]/,
+  IWATS_COMPLETED: /^IWATS Course added to Academic Record by the SOO : \[(?<iuCourse>[^\(]+)] - (?<percentage>\d+%)/,
+  IU_COMPLETED: /^IU Course added to Academic Record by the SOO : \[(?<iuCourse>[^\(]+)] - (?<percentage>\d+%)/,
   IU_REMOVED: /^IU Course removed from Academic Record by the SOO : \[(?<iuCourse>[^\(]+)]/,
   NEW_COMBAT_RATING: /^New Combat Rating achieved : (?<combatRating>.*)/,
-  NEW_COMPETITION: /^Submitted competition approved : .*id=(?<competitionId>\d+).*">/,
+  NEW_COMPETITION: /^Submitted competition approved : ID# (?<competitionId>\d+)/,
   NEW_REPORT: /^Submitted a new (?<reportType>.*) report/,
-  NEW_FCHG: /^New Fleet Commander's Honor Guard rank achieved : (?<fchg>\S+)/,
+  NEW_FCHG: /^New Fleet Commander\\'s Honor Guard rank achieved : (?<fchg>\S+)/,
   NEW_COOP_RATING: /New COOP\/PVE Rating achieved : (?<rating>\S+)/,
   NEW_PROMOTION: /^New promotion : .* \((?<rankShorthand>\S+)\)/,
   NEW_UNIFORM_APPROVED: /^New uniform upload approved/,
@@ -42,11 +46,21 @@ const REGEXES = {
   UPDATED_INPR: /^Updated Imperial Navy Personnel Record \(INPR\)/,
   UPDATED_ROSTER: /^Updated the roster information for (?<unit>.+)/,
   RANK_SET_BY_TCCOM: /^New rank set by the TCCOM : .+ \((?<rankShorthand>.+)\)/,
-
+  MEDAL_COUNT_UPDATED: /^Medal count updated by the SOO - (?<medalShorthand>.*) : [+-](?<qty>\d+)/,
   IGNORE_COMBAT_EVENT_REMOVED: /^Combat event participation removed/,
 };
 
-function activityTypeByString(activityString) {
+function removeTags(str) {
+  if (!str) {
+    return "";
+  }
+
+  str = str.toString();
+  return str.replace( /(<([^>]+)>)/ig, '');
+}
+
+function activityTypeByString(activityStringWithHTML) {
+  const activityString = removeTags(activityStringWithHTML);
   const matcher = Object.keys(REGEXES).find(r => REGEXES[r].exec(activityString));
 
   if (!matcher) {
