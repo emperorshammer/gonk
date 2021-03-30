@@ -14,3 +14,20 @@ a {
 * {
   box-sizing: border-box;
 }
+
+h2 {
+  margin-bottom: 0;
+}
+
+pre {
+  width: 100%;
+}
+
+hr {
+  border-color: #000;
+  width: 100%;
+}
+
+label {
+  margin-right: 0.5em;
+}
