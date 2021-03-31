@@ -66,6 +66,7 @@ async function paginateActivityData(pilotId, startDate, endDate, page = 1) {
 
   const params = {
     page,
+    pageSize: 49,
     ...(startDate ? { startDate } : {}),
     ...(endDate ? { endDate } : {}),
   };
