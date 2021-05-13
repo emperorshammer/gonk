@@ -40,7 +40,7 @@ function removeTags(str) {
   }
 
   str = str.toString();
-  return str.replace( /(<([^>]+)>)/ig, '');
+  return str.replace(/(<([^>]+)>)/ig, '');
 }
 
 function activityTypeByString(activityStringWithHTML) {
@@ -61,21 +61,25 @@ function activityTypeByString(activityStringWithHTML) {
   };
 }
 
-async function paginateActivityData(pilotId, startDate, endDate, page = 1) {
+async function paginateActivityData(pilotId, startDate, endDate, page = 1, recordsReturned = 0) {
   const url = `https://api.emperorshammer.org/atr/${pilotId}`;
 
   const params = {
     page,
-    pageSize: 49,
     ...(startDate ? { startDate } : {}),
     ...(endDate ? { endDate } : {}),
   };
 
   const { data: activity } = await request({ url, params });
 
-  // Load no more than 20 pages of results to keep things from falling apart
-  if (activity.hasMore && page < 20) {
-    const nextPageData = await paginateActivityData(pilotId, startDate, endDate, page + 1);
+  recordsReturned += activity.activity.length;
+
+  console.log(recordsReturned, activity.total);
+
+  // Check if the length of the activity array is less than the total number, and if it is, keep
+  // paginating. Load no more than 20 pages of results to keep things from falling apart.
+  if (recordsReturned < activity.total && page < 20) {
+    const nextPageData = await paginateActivityData(pilotId, startDate, endDate, page + 1, recordsReturned);
 
     return [
       ...activity.activity,
