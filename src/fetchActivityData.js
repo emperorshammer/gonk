@@ -11,10 +11,10 @@ const REGEXES = {
   IWATS_COMPLETED: /^IWATS Course added to Academic Record by the SOO : \[(?<iuCourse>[^\(]+)] - (?<percentage>\d+%)/,
   IU_COMPLETED: /^IU Course added to Academic Record by the SOO : \[(?<iuCourse>[^\(]+)] - (?<percentage>\d+%)/,
   IU_REMOVED: /^IU Course removed from Academic Record by the SOO : \[(?<iuCourse>[^\(]+)]/,
-  NEW_COMBAT_RATING: /^New Combat Rating achieved : (?<combatRating>.*)/,
+  NEW_COMBAT_RATING: /^New Combat Rating achieved : (?<rating>.*)/,
   NEW_COMPETITION: /^Submitted competition approved : ID# (?<competitionId>\d+)/,
   NEW_REPORT: /^Submitted a new (?<reportType>.*) report/,
-  NEW_FCHG: /^New Fleet Commander\\'s Honor Guard rank achieved : (?<fchg>.*)/,
+  NEW_FCHG: /^New Fleet Commander\\'s Honor Guard rank achieved : (?<rating>.*)/,
   NEW_COOP_RATING: /New COOP\/PVE Rating achieved : (?<rating>.*)/,
   NEW_PROMOTION: /^New promotion : .* \((?<rankShorthand>\S+)\)/,
   NEW_UNIFORM_APPROVED: /^New uniform upload approved/,
@@ -82,8 +82,6 @@ async function paginateActivityData(pilotId, startDate, endDate, page = 1, recor
   const { data: activity } = await request({ url, params });
 
   recordsReturned += activity.activity.length;
-
-  console.log(recordsReturned, activity.total);
 
   // Check if the length of the activity array is less than the total number, and if it is, keep
   // paginating. Load no more than 20 pages of results to keep things from falling apart.
