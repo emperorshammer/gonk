@@ -31,3 +31,11 @@ hr {
 label {
   margin-right: 0.5em;
 }
+
+td {
+  padding: 0.25em 1em;
+}
+
+tfoot td {
+  border-top: solid 1px #000;
+}

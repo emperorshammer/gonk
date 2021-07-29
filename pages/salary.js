@@ -79,7 +79,7 @@ export default function SquadronSalary() {
   if (!pilotData) {
     return (
       <div className={styles.container}>
-        <h1>Loading...</h1>;
+        <h1>Loading...</h1>
       </div>
     );
   }
@@ -106,7 +106,7 @@ export default function SquadronSalary() {
           </>
         )}
 
-        <table width="100%">
+        <table cellPadding="2" cellSpacing="2">
           <thead>
             <tr>
               <th>
@@ -159,7 +159,7 @@ export default function SquadronSalary() {
         </table>
 
         <p>
-          Notes: points for "Graphics" (25), "Streaming" (1), and
+          Note: points for "Graphics" (25), "Streaming" (1), and
           "Competitions" (50) cannot be automatically pulled from the database.
         </p>
 
