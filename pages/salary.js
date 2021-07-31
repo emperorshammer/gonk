@@ -106,14 +106,15 @@ export default function SquadronSalary() {
           </>
         )}
 
-        <table cellPadding="2" cellSpacing="2">
+        <table cellPadding="2" cellSpacing="2" className="salary">
           <thead>
             <tr>
               <th>
                 Income Source
               </th>
+              <th>Amount Each</th>
               <th>
-                Amount
+                Value
               </th>
             </tr>
           </thead>
@@ -122,8 +123,21 @@ export default function SquadronSalary() {
               <td>
                 {salaryData.primaryPosition}
               </td>
+              <td></td>
               <td>
                 {salaryData.positionBase}
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                Rank: {salaryData.rankAbbr}
+              </td>
+              <td>
+                +{salaryData.rankBonusWeight}%
+              </td>
+              <td>
+                {salaryData.rankBonus}
               </td>
             </tr>
 
@@ -131,6 +145,8 @@ export default function SquadronSalary() {
               <tr key={position}>
                 <td>
                   {position}
+                </td>
+                <td>
                 </td>
                 <td>
                   {salaryData.secondaryBonuses[position]}
@@ -144,7 +160,11 @@ export default function SquadronSalary() {
                   {bonus}
                 </td>
                 <td>
-                  {salaryData.activityBonuses[bonus]}
+                  {`${salaryData.activityBonuses[bonus].bonusPer} x `}
+                  {`${salaryData.activityBonuses[bonus].amount}`}
+                </td>
+                <td>
+                  {salaryData.activityBonuses[bonus].bonus}
                 </td>
               </tr>
             ))}
@@ -152,7 +172,7 @@ export default function SquadronSalary() {
 
           <tfoot>
             <tr style={{ borderTop: "solid 1px #000" }}>
-              <td>TOTAL</td>
+              <td colSpan="2">TOTAL</td>
               <td>{salaryData.totalSalary}</td>
             </tr>
           </tfoot>

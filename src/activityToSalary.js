@@ -80,17 +80,29 @@ export function getActivityBonuses(activityData) {
     if(activityData[key]) {
       return {
         ...map,
-        [key]: activityData[key].length * ACTIVITY_BONUSES[key],
+        [key]: {
+          amount: activityData[key].length,
+          bonus: activityData[key].length * ACTIVITY_BONUSES[key],
+          bonusPer: ACTIVITY_BONUSES[key],
+        },
       }
     } else if (key === "LOS") {
       return {
         ...map,
-        [key]: activityData.MEDALS_AWARDED.LoS * ACTIVITY_BONUSES.LOS,
+        [key]: {
+          amount: activityData.MEDALS_AWARDED.LoS,
+          bonus: activityData.MEDALS_AWARDED.LoS * ACTIVITY_BONUSES.LOS,
+          bonusPer: ACTIVITY_BONUSES.LOS,
+        }
       }
     } else if (key === "LOC") {
       return {
         ...map,
-        [key]: activityData.MEDALS_AWARDED.LoC * ACTIVITY_BONUSES.LOC,
+        [key]: {
+          amount: activityData.MEDALS_AWARDED.LoC,
+          bonus: activityData.MEDALS_AWARDED.LoC * ACTIVITY_BONUSES.LOC,
+          bonusPer: ACTIVITY_BONUSES.LOC,
+        }
       }
     }
 
@@ -108,6 +120,7 @@ export function activityToSalary(pilotInfo, activityData) {
   const subPositions = getSubpositions(IDLine);
 
   const positionBase = POSITION_BASE_SALARY[primaryPosition];
+  const rankBonus = positionBase * (RANK_WEIGHTS[rankAbbr] / 100);
 
   const secondaryBonuses = subPositions.reduce((total, position) => ({
     ...total,
@@ -122,17 +135,20 @@ export function activityToSalary(pilotInfo, activityData) {
   const activityBonuses = getActivityBonuses(activityData);
 
   const activityBonusTotal = Object.values(activityBonuses).reduce((total, current) =>
-    (total + current),
+    (total + current.bonus),
     0
   );
 
   return {
     primaryPosition,
+    rankAbbr,
+    rankBonus,
     subPositions,
     positionBase,
     secondaryBonuses,
     secondaryBonusTotal,
     activityBonuses,
-    totalSalary: positionBase + secondaryBonusTotal + activityBonusTotal
+    rankBonusWeight: RANK_WEIGHTS[rankAbbr],
+    totalSalary: positionBase + secondaryBonusTotal + activityBonusTotal + rankBonus
   };
 }

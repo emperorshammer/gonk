@@ -39,3 +39,8 @@ td {
 tfoot td {
   border-top: solid 1px #000;
 }
+
+td:nth-child(2),
+td:nth-child(3) {
+  text-align: right;
+}
