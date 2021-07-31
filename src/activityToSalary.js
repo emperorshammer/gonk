@@ -1,6 +1,16 @@
 const POSITION_BASE_SALARY = {
   FC: 50000,
-  EHCS: 35000,
+
+  // all EHCS is 35k
+  IO: 35000,
+  TO: 35000,
+  COMM: 35000,
+  TAC: 35000,
+  SCO: 35000,
+  RO: 35000,
+  PRN: 35000,
+  ISP: 35000,
+
   TCCOM: 25000,
   SOO: 14000,
   COO: 14000,
@@ -123,7 +133,11 @@ export function activityToSalary(pilotInfo, activityData) {
   const exactRankBonus = positionBase * RANK_WEIGHTS[rankAbbr];
   const rankBonus = Math.round(exactRankBonus * 100) / 100;
 
-  const secondaryBonuses = subPositions.reduce((total, position) => ({
+  const secondaryBonuses = subPositions
+    .filter((position) => {
+      SECONDARY_POSITION_BONUSES[position]
+    })
+    .reduce((total, position) => ({
     ...total,
     [position]: SECONDARY_POSITION_BONUSES[position],
   }), {});
