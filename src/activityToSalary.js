@@ -28,23 +28,23 @@ const SECONDARY_POSITION_BONUSES = {
 };
 
 const RANK_WEIGHTS = {
-  GA: 1.50,
-  SA: 1.45,
-  HA: 1.40,
-  FA: 1.35,
-  AD: 1.30,
-  VA: 1.25,
-  RA: 1.00,
-  GN: 1.20,
-  COL: 1.18,
-  LC: 1.15,
-  MAJ: 1.12,
-  CPT: 1.10,
-  CM: 1.08,
-  LCM: 1.05,
-  LT: 1.03,
-  SL: 1.00,
-  CT: 1.00,
+  GA: .50,
+  SA: .45,
+  HA: .40,
+  FA: .35,
+  AD: .30,
+  VA: .25,
+  RA: .00,
+  GN: .20,
+  COL: .18,
+  LC: .15,
+  MAJ: .12,
+  CPT: .10,
+  CM: .08,
+  LCM: .05,
+  LT: .03,
+  SL: .00,
+  CT: .00,
 };
 
 const ACTIVITY_BONUSES = {
@@ -120,7 +120,7 @@ export function activityToSalary(pilotInfo, activityData) {
   const subPositions = getSubpositions(IDLine);
 
   const positionBase = POSITION_BASE_SALARY[primaryPosition];
-  const exactRankBonus = positionBase * (RANK_WEIGHTS[rankAbbr] / 100);
+  const exactRankBonus = positionBase * RANK_WEIGHTS[rankAbbr];
   const rankBonus = Math.round(exactRankBonus * 100) / 100;
 
   const secondaryBonuses = subPositions.reduce((total, position) => ({

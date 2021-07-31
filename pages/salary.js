@@ -125,7 +125,7 @@ export default function SquadronSalary() {
               </td>
               <td></td>
               <td>
-                {salaryData.positionBase.toFixed(2)}
+                {salaryData.positionBase}
               </td>
             </tr>
 
@@ -134,10 +134,10 @@ export default function SquadronSalary() {
                 Rank: {salaryData.rankAbbr}
               </td>
               <td>
-                +{salaryData.rankBonusWeight}%
+                +{salaryData.rankBonusWeight * 100}%
               </td>
               <td>
-                {salaryData.rankBonus.toFixed(2)}
+                {salaryData.rankBonus}
               </td>
             </tr>
 
@@ -149,7 +149,7 @@ export default function SquadronSalary() {
                 <td>
                 </td>
                 <td>
-                  {salaryData.secondaryBonuses[position].toFixed(2)}
+                  {salaryData.secondaryBonuses[position]}
                 </td>
               </tr>
             ))}
@@ -164,7 +164,7 @@ export default function SquadronSalary() {
                   {`${salaryData.activityBonuses[bonus].amount}`}
                 </td>
                 <td>
-                  {salaryData.activityBonuses[bonus].bonus.toFixed(2)}
+                  {salaryData.activityBonuses[bonus].bonus}
                 </td>
               </tr>
             ))}
@@ -173,7 +173,7 @@ export default function SquadronSalary() {
           <tfoot>
             <tr style={{ borderTop: "solid 1px #000" }}>
               <td colSpan="2">TOTAL</td>
-              <td>{salaryData.totalSalary.toFixed(2)}</td>
+              <td>{salaryData.totalSalary}</td>
             </tr>
           </tfoot>
         </table>
