@@ -96,7 +96,7 @@ export default function SquadronSalary() {
       <main className={styles.main}>
         <Link href="/salary">&lt;- Go Back</Link>
 
-        { pilot && (
+        {pilot && (
           <>
             <h1 className={styles.title}>{ `${pilot.label}` }</h1>
 
@@ -125,7 +125,7 @@ export default function SquadronSalary() {
               </td>
               <td></td>
               <td>
-                {salaryData.positionBase}
+                {salaryData.positionBase.toFixed(2)}
               </td>
             </tr>
 
@@ -137,7 +137,7 @@ export default function SquadronSalary() {
                 +{salaryData.rankBonusWeight}%
               </td>
               <td>
-                {salaryData.rankBonus}
+                {salaryData.rankBonus.toFixed(2)}
               </td>
             </tr>
 
@@ -149,7 +149,7 @@ export default function SquadronSalary() {
                 <td>
                 </td>
                 <td>
-                  {salaryData.secondaryBonuses[position]}
+                  {salaryData.secondaryBonuses[position].toFixed(2)}
                 </td>
               </tr>
             ))}
@@ -164,7 +164,7 @@ export default function SquadronSalary() {
                   {`${salaryData.activityBonuses[bonus].amount}`}
                 </td>
                 <td>
-                  {salaryData.activityBonuses[bonus].bonus}
+                  {salaryData.activityBonuses[bonus].bonus.toFixed(2)}
                 </td>
               </tr>
             ))}
@@ -173,7 +173,7 @@ export default function SquadronSalary() {
           <tfoot>
             <tr style={{ borderTop: "solid 1px #000" }}>
               <td colSpan="2">TOTAL</td>
-              <td>{salaryData.totalSalary}</td>
+              <td>{salaryData.totalSalary.toFixed(2)}</td>
             </tr>
           </tfoot>
         </table>

@@ -90,8 +90,8 @@ export function getActivityBonuses(activityData) {
       return {
         ...map,
         [key]: {
-          amount: activityData.MEDALS_AWARDED.LoS,
-          bonus: activityData.MEDALS_AWARDED.LoS * ACTIVITY_BONUSES.LOS,
+          amount: activityData.MEDALS_AWARDED.LoS || 0,
+          bonus: (activityData.MEDALS_AWARDED.LoS || 0) * ACTIVITY_BONUSES.LOS,
           bonusPer: ACTIVITY_BONUSES.LOS,
         }
       }
@@ -99,8 +99,8 @@ export function getActivityBonuses(activityData) {
       return {
         ...map,
         [key]: {
-          amount: activityData.MEDALS_AWARDED.LoC,
-          bonus: activityData.MEDALS_AWARDED.LoC * ACTIVITY_BONUSES.LOC,
+          amount: activityData.MEDALS_AWARDED.LoC || 0,
+          bonus: (activityData.MEDALS_AWARDED.LoC || 0) * ACTIVITY_BONUSES.LOC,
           bonusPer: ACTIVITY_BONUSES.LOC,
         }
       }
@@ -120,7 +120,8 @@ export function activityToSalary(pilotInfo, activityData) {
   const subPositions = getSubpositions(IDLine);
 
   const positionBase = POSITION_BASE_SALARY[primaryPosition];
-  const rankBonus = positionBase * (RANK_WEIGHTS[rankAbbr] / 100);
+  const exactRankBonus = positionBase * (RANK_WEIGHTS[rankAbbr] / 100);
+  const rankBonus = Math.round(exactRankBonus * 100) / 100;
 
   const secondaryBonuses = subPositions.reduce((total, position) => ({
     ...total,
