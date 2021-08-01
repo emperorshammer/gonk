@@ -3,6 +3,7 @@ const POSITION_BASE_SALARY = {
 
   // all EHCS is 35k
   IO: 35000,
+  LO: 35000,
   TO: 35000,
   COMM: 35000,
   TAC: 35000,
