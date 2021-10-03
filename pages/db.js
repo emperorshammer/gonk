@@ -8,50 +8,53 @@ import { request } from 'axios';
 
 const BATTLETEAMS = {
   hyperion: [
+    55933, /*5159, Gytheran*/
+    5402, /*1900, Pellaeon*/
+    13086, /*4801, Silvius*/
+    7659, /*2521, Coranel*/
     419, /*718 DB, Torres */
-    11276, /*3452, Earnim*/
+    11691, /*3673, Horus*/
     8171, /*2633, Eclipse*/
-    5243, /*1858, Exar*/
+    3643, /*1464, Pete Mitchell*/
+    13050, /*4791, Sparky*/
+    55805, /*4994, Highlander*/
+    56051, /*5132, Hijacker*/
+    55730, /*4937, Genie*/
+    572, /*831, Phoenix*/
+    56147, /* Exose */
+    56107, /*5148, Shoma*/
+    56015, /* DemWookieCheeks */
+    56080, /*5151, XCptCronchX*/
   ],
   sentinel: [
     1818, /*1112, Talons*/
-    5118, /*1831, Zekk*/
+    11276, /*3452, Earnim*/
+    11759, /*3705, Golbez*/
+    708, /*909, Marenta*/
     7782, /*2552, Coremy*/
-    13050, /*4791, Sparky*/
-    55805, /*4994, Highlander*/
-    572, /*831, Phoenix*/
-    56107, /*5148, Shoma*/
+    55788, /*4984, EvilGrin*/
+    55591, /*4869, Rachel Drakon*/
+    56112, /*5154, andr3*/
+    55848, /*5147, Taygetta*/
   ],
   stingray: [
-    12971, /*4647, Jarion*/
-    5402, /*1900, Pellaeon*/
-    12433, /*379,*/
-    13086, /*4801, Silvius*/
-    12945, /*382, Dempsey*/
-    7659, /*2521, Coranel*/
-    11759, /*3705, Golbez*/
-    11690, /*3672, John T Clark*/
-    708, /*909, Marenta*/
-    6874, /*2304, Phalk*/
-    11691, /*3673, Horus*/
-    1968, /*1139, Kalve*/
-    3643, /*1464, Pete Mitchell*/
     56017, /*5111, Coldsnacks*/
+    12433, /*379, Baron*/
+    12945, /*382, Dempsey*/
+    11690, /*3672, John T Clark*/
+    6874, /*2304, Phalk*/
+    8044, /* ti-40026 */
     55973, /*5084, Honsou*/
+    12971, /*4647, Jarion*/
     55962, /*5109, Wreckage*/
-    55678, /*4611, Aldaric*/
-    55788, /*4984, EvilGrin*/
-    55730, /*4937, Genie*/
-    56051, /*5132, Hijacker*/
     55942, /*5090, Morgoth*/
-    55591, /*4869, Rachel Drakon*/
-    55922, /*5069, EchoVII*/
-    55933, /*5159, Gytheran*/
-    56071, /*5144, Taurus*/
-    55848, /*5147, Taygetta*/
+    55678, /*4611, Aldaric*/
+    56102, /* Audis Graves */
     56022, /*5141, TheBlackxRanger*/
-    56112, /*5154, andr3*/
-    56080, /*5151, XCptCronchX*/
+    55900, /* Aardvark */
+    55922, /*5069, EchoVII*/
+    55977, /* fr0zen */
+    5243, /*1858, Exar*/
   ],
 };
 
