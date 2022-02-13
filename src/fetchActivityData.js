@@ -6,7 +6,7 @@ const REGEXES = {
   COMBAT_EVENT_PARTICIPATION: /Combat event participation added to Combat Record by the COO : CE ID# (?<eventId>\d+)/,
   MEDAL_AWARDED: /^Medal awarded : [^\(]+ \((?<medalShorthand>.+)\)/,
   MEDALS_AWARDED: /^Medals awarded : (?<qty>\d+) [^\(]+ \((?<medalShorthand>.+)s?\)/,
-  BATTLE_COMPLETED: /^Battle completed : (?<battleType>\S+) (?<battleId>\d+) \((?<numMissions>\d+) missions?\)/,
+  BATTLE_COMPLETED: /^Battle completed\s?: (?<battleType>\S+) (?<battleId>\d+) \((?<numMissions>\d+) missions?\)/,
   SUBMITTED_BATTLE_REVIEW: /^Submitted review for battle (?<battleType>\S+) (?<battleId>\d+)/,
   IWATS_COMPLETED: /^IWATS Course added to Academic Record by the SOO : \[(?<iuCourse>[^\(]+)] - (?<percentage>\d+%)/,
   IU_COMPLETED: /^IU Course added to Academic Record by the SOO : \[(?<iuCourse>[^\(]+)] - (?<percentage>\d+%)/,
@@ -14,7 +14,7 @@ const REGEXES = {
   NEW_COMBAT_RATING: /^New Combat Rating achieved : (?<rating>.*)/,
   NEW_COMPETITION: /^Submitted competition approved : ID# (?<competitionId>\d+)/,
   NEW_REPORT: /^Submitted a new (?<reportType>.*) report/,
-  NEW_FCHG: /^New Fleet Commander\\'s Honor Guard rank achieved : (?<rating>.*)/,
+  NEW_FCHG: /^New Fleet Commander's Honor Guard rank achieved : (?<rating>.*) \[(?<shorthand>.*)\]/,
   NEW_COOP_RATING: /New COOP\/PVE Rating achieved : (?<rating>.*)/,
   NEW_PROMOTION: /^New promotion : .* \((?<rankShorthand>\S+)\)/,
   NEW_UNIFORM_APPROVED: /^New uniform upload approved/,
@@ -22,16 +22,21 @@ const REGEXES = {
   NEW_ASSIGNMENT: /^New assignment :(?<assignment>.+)/,
   CREATED_BATTLE: /^Battle created by this pilot added to TC database : (?<battleType>\S+) (?<battleId>\d+)/,
   SUBMITTED_FICTION: /^New FICTION added by WARD \((?<title>.+)\)/,
+  SUBMITTED_GRAPHICS: /New gfx added by WARD \((?<name>.+)\)/,
   SUBMITTED_PATCH_BUG_REPORT: /^Submitted bug report for patch (?<patchType>\S+): (?<patchDetails>.+)/,
   SUBMITTED_BATTLE_BUG_REPORT: /^Submitted bug report for battle (?<battleType>\S+) (?<battleId>\d+)/,
   UPDATED_INPR: /^Updated Imperial Navy Personnel Record \(INPR\)/,
-  UPDATED_ROSTER: /^Updated the roster information for (?<unit>.+)/,
+  UPDATED_UNIT_INFORMATION: /^Updated unit information for (?<unit>.+)\./,
   RANK_SET_BY_TCCOM: /^New rank set by the TCCOM : .+ \((?<rankShorthand>.+)\)/,
   MEDAL_COUNT_UPDATED: /^Medal count updated by the SOO - (?<medalShorthand>.*) : [+-](?<qty>\d+)/,
   IGNORE_COMBAT_EVENT_REMOVED: /^Combat event participation removed/,
   FLIGHT_CERTIFICATION_WINGS: /Flight Certification Wings awarded : (?<echelon>.*)/,
   OBTAINED_FLIGHT_CERTIFICATION: /Obtained TIE Corps Flight Certification/,
-  JOINED: /Joined the Emperor\\'s Hammer TIE Corps as Cadet (?<name>.*)!/
+  JOINED: /Joined the Emperor's Hammer TIE Corps as Cadet (?<name>.*)!/,
+  EMAIL_UPDATED: /Personal e-mail address updated/,
+  NAME_CHANGE: /Pilot name changed : (?<name>)/,
+
+  UPDATED_ROSTER: /^Updated the roster information for (?<unit>.+)/, // deprecated; became UPDATED_UNIT_INFORMATION
 };
 
 function removeTags(str) {
