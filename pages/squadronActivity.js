@@ -5,8 +5,8 @@ import { fetchSquadronData } from '../src/fetchSquadronData';
 import { loadActivityData, formatActivityData } from '../src/fetchActivityData';
 import styles from '../styles/Home.module.css'
 
-export async function loadSquadronData(squadronId, startDate, endDate) {
-  const squadron = await fetchSquadronData(squadronId);
+export async function loadSquadronData(squadronId, startDate, endDate, baseAPI) {
+  const squadron = await fetchSquadronData(squadronId, baseAPI);
 
   if (!squadron) {
     return {
@@ -15,7 +15,7 @@ export async function loadSquadronData(squadronId, startDate, endDate) {
   }
 
   const squadronActivity = await Promise.all(squadron.pilots.map(({ PIN: pin }) => (
-    loadActivityData(pin, startDate, endDate)
+    loadActivityData(pin, startDate, endDate, baseAPI)
   )));
 
   squadronActivity.forEach((activity, i) => {
@@ -57,9 +57,11 @@ export default function SquadronActivity() {
   useEffect(() => {
     if (!query.squadronId) { return; }
 
-    const { squadronId, startDate, endDate } = query;
+    const { squadronId, startDate, endDate, useDevServer } = query;
 
-    loadSquadronData(squadronId, startDate, endDate)
+    const baseAPI = useDevServer === "on" ? "https://devapi.emperorshammer.org" : undefined;
+
+    loadSquadronData(squadronId, startDate, endDate, baseAPI)
       .then(setData)
       .catch(setError)
       .finally(() => setLoading(false));
@@ -74,7 +76,7 @@ export default function SquadronActivity() {
       <main className={styles.main}>
         { squadron && (
           <>
-            <h1 className={styles.title}>{ `${squadron.name} Squadron` }</h1>
+            <h1 className={styles.title}>{squadron.name}</h1>
 
             <h3>
               <em>Activity report for {query.startDate} - {query.endDate}</em>

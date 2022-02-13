@@ -26,6 +26,15 @@ export default function Home() {
 
           <br />
 
+          {/*
+            <label htmlFor="useDevServer">
+              <input type="checkbox" name="useDevServer" id="useDevServer" />
+              Use dev server
+            </label>
+
+            <br />
+          */}
+
           <button tyoe="submit">Go Forth</button>
         </form>
       </main>

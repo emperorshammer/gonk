@@ -70,8 +70,8 @@ function activityTypeByString(activityStringWithHTML) {
   };
 }
 
-async function paginateActivityData(pilotId, startDate, endDate, page = 1, recordsReturned = 0) {
-  const url = `https://api.emperorshammer.org/atr/${pilotId}`;
+async function paginateActivityData(pilotId, startDate, endDate, page = 1, recordsReturned = 0, baseAPI = 'https://api.emperorshammer.org') {
+  const url = `${baseAPI}/atr/${pilotId}`;
 
   const params = {
     page,
@@ -86,7 +86,7 @@ async function paginateActivityData(pilotId, startDate, endDate, page = 1, recor
   // Check if the length of the activity array is less than the total number, and if it is, keep
   // paginating. Load no more than 20 pages of results to keep things from falling apart.
   if (recordsReturned < activity.total && page < 20) {
-    const nextPageData = await paginateActivityData(pilotId, startDate, endDate, page + 1, recordsReturned);
+    const nextPageData = await paginateActivityData(pilotId, startDate, endDate, page + 1, recordsReturned, baseAPI);
 
     return [
       ...activity.activity,
@@ -97,8 +97,8 @@ async function paginateActivityData(pilotId, startDate, endDate, page = 1, recor
   return activity.activity || [];
 }
 
-export async function loadActivityData(pilotId, startDate, endDate) {
-  const activity = await paginateActivityData(pilotId, startDate, endDate);
+export async function loadActivityData(pilotId, startDate, endDate, baseAPI = 'https://api.emperorshammer.org') {
+  const activity = await paginateActivityData(pilotId, startDate, endDate, 1, 0, baseAPI);
 
   if (!activity) {
     return [];
@@ -168,8 +168,8 @@ export function formatActivityData(activityData) {
   return text;
 }
 
-export async function fetchFormattedActivityData(pilotId, activityData) {
-  const { data: pilotJSON } = await request({ url: `http://api.emperorshammer.org/pilot/${pilotId}` });
+export async function fetchFormattedActivityData(pilotId, activityData, baseAPI = 'https://api.emperorshammer.org') {
+  const { data: pilotJSON } = await request({ url: `${baseAPI}/pilot/${pilotId}` });
   const title = `${pilotJSON.label} #${pilotJSON.PIN}`;
   const underline = "".padStart(title.length, "=");
 

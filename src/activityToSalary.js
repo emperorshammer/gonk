@@ -88,7 +88,9 @@ export function getPosition(IDLine) {
 
 export function getActivityBonuses(activityData) {
   return Object.keys(ACTIVITY_BONUSES).reduce((map, key) => {
-    if(activityData[key]) {
+    if (activityData["BATTLE_COMPLETED"]) {
+      // TODO map over all of te battles to find the sum of all missions
+    } else if(activityData[key]) {
       return {
         ...map,
         [key]: {

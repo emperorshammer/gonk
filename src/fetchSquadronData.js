@@ -1,12 +1,12 @@
 import axios from 'axios';
 
-export async function fetchSquadronInfo(squadronId) {
-  const { data: squadron } = await axios.get(`https://api.emperorshammer.org/squadron/${squadronId}`);
+export async function fetchSquadronInfo(squadronId, baseAPI = 'https://api.emperorshammer.org') {
+  const { data: squadron } = await axios.get(`${baseAPI}/squadron/${squadronId}`);
   return squadron;
 }
 
-export async function fetchSquadronData(squadronId) {
-  const squadronInfo = await fetchSquadronInfo(squadronId);
+export async function fetchSquadronData(squadronId, baseAPI) {
+  const squadronInfo = await fetchSquadronInfo(squadronId, baseAPI);
 
   squadronInfo.pilots = squadronInfo.pilots.map((pilot) => ({
     ...pilot,
