@@ -4,8 +4,9 @@ import { omit } from 'lodash';
 
 const REGEXES = {
   COMBAT_EVENT_PARTICIPATION: /Combat event participation added to Combat Record by the COO\s?: CE ID# (?<eventId>\d+)/,
-  MEDAL_AWARDED: /^(Medal awarded|New award)\s?: (?<medalShorthand>.+)\s\(?/,
+  MEDAL_AWARDED: /^(Medal awarded)\s?: (?<medalShorthand>.+)\s\(?/,
   MEDALS_AWARDED: /^Medals awarded\s?: (?<qty>\d+) [^\(]+ \((?<medalShorthand>.+)s?\)/,
+  IGNORE_ME_IM_CONFUSING_DATA: /^New award:/,
   BATTLE_COMPLETED: /^Battle completed\s?: (?<battleType>\S+) (?<battleId>\d+) \((?<numMissions>\d+) missions?\)/,
   SUBMITTED_BATTLE_REVIEW: /^Submitted review for battle (?<battleType>\S+) (?<battleId>\d+)/,
   IWATS_COMPLETED: /^IWATS Course added to Academic Record by the SOO\s?: \[(?<iuCourse>[^\(]+)] - (?<percentage>\d+%)/,
@@ -143,8 +144,18 @@ export async function loadActivityData(pilotId, startDate, endDate, baseAPI = 'h
       let { medalShorthand, qty } = medal;
       qty = qty * 1;
 
-      if (qty > 1) {
+      // suuuuper hacky. old website added an "s", like "LoSs". New one is just "LoS."
+      if (qty > 1 && medalShorthand[medalShorthand.length - 1] === "s") {
         medalShorthand = medalShorthand.slice(0, medalShorthand.length - 1);
+      }
+
+      // normalize LoCs / LoSs between old and new website data
+      if (medalShorthand === "Legion of Combat") {
+        medalShorthand = "LoC";
+      }
+
+      if (medalShorthand === "Legion of Skirmish") {
+        medalShorthand = "LoS";
       }
 
       return {
