@@ -4,7 +4,7 @@ import { omit } from 'lodash';
 
 const REGEXES = {
   COMBAT_EVENT_PARTICIPATION: /Combat event participation added to Combat Record by the COO\s?: CE ID# (?<eventId>\d+)/,
-  MEDAL_AWARDED: /^(Medal awarded)\s?: (?<medalShorthand>.+)\s\(?/,
+  MEDAL_AWARDED: /^(Medal awarded)\s?: (?<medal>.+) \((?<medalShorthand>.+)\)/,
   MEDALS_AWARDED: /^Medals awarded\s?: (?<qty>\d+) [^\(]+ \((?<medalShorthand>.+)s?\)/,
   IGNORE_ME_IM_CONFUSING_DATA: /^New award:/,
   BATTLE_COMPLETED: /^Battle completed\s?: (?<battleType>\S+) (?<battleId>\d+) \((?<numMissions>\d+) missions?\)/,
@@ -27,7 +27,7 @@ const REGEXES = {
   SUBMITTED_PATCH_BUG_REPORT: /^Submitted bug report for patch (?<patchType>\S+): (?<patchDetails>.+)/,
   SUBMITTED_BATTLE_BUG_REPORT: /^Submitted bug report for battle (?<battleType>\S+) (?<battleId>\d+)/,
   UPDATED_INPR: /^Updated Imperial Navy Personnel Record \(INPR\)/,
-  UPDATED_UNIT_INFORMATION: /^Updated unit information for (?<unit>.+)\./,
+  UPDATED_UNIT_INFORMATION: /^Updated unit information for (?<unit>.+)\.?/,
   RANK_SET_BY_TCCOM: /^New rank set by the TCCOM\s?: .+ \((?<rankShorthand>.+)\)/,
   MEDAL_COUNT_UPDATED: /^Medal count updated by the SOO - (?<medalShorthand>.*)\s?: [+-](?<qty>\d+)/,
   IGNORE_COMBAT_EVENT_REMOVED: /^Combat event participation removed/,
