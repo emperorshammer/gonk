@@ -1,8 +1,7 @@
 import axios from 'axios';
 
 export async function fetchSquadronInfo(squadronId, baseAPI = 'https://api.emperorshammer.org') {
-  const { data: squadron } = await axios.get(`${baseAPI}/squadron/${squadronId}`);
-  return squadron;
+  return axios.get(`${baseAPI}/squadron/${squadronId}`);
 }
 
 export async function fetchSquadronData(squadronId, baseAPI) {

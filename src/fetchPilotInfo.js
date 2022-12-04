@@ -1,9 +1,5 @@
-import { request } from 'axios';
+import axios from 'axios';
 
 export async function fetchPilotInfo(pilotId, baseAPI = 'https://api.emperorshammer.org') {
-  const { data: pilotJSON } = await request({
-    url: `${baseAPI}/pilot/${pilotId}`
-  });
-
-  return pilotJSON;
+  return axios.get(`${baseAPI}/pilot/${pilotId})`);
 }

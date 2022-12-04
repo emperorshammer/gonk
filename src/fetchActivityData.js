@@ -1,5 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { request } from 'axios';
+import axios from 'axios';
 import { omit } from 'lodash';
 
 const REGEXES = {
@@ -13,6 +13,7 @@ const REGEXES = {
   IWATS_COMPLETED: /^IWATS Course added to Academic Record by the SOO\s?: \[(?<iuCourse>[^\(]+)] - (?<percentage>\d+%)/,
   IU_COMPLETED: /^IU Course added to Academic Record by the SOO\s?: \[(?<iuCourse>[^\(]+)] - (?<percentage>\d+%)/,
   IU_REMOVED: /^IU Course removed from Academic Record by the SOO\s?: \[(?<iuCourse>[^\(]+)]/,
+  COURSE_PASSED: /^Course passed: (?<courseName>.*) \[(?<courseCode>[^\(]+)] - (?<courseGrade>\d+%)/,
   NEW_COMBAT_RATING: /^New Combat Rating (\(MP PvP\) rank\s)?achieved\s?: (?<rating>.*)/,
   NEW_COMPETITION: /^Submitted competition approved\s?: ID# (?<competitionId>\d+)/,
   COMPETITION_APPROVED: /Competition approved: (?<competitionName>.+)/,
@@ -87,7 +88,7 @@ async function paginateActivityData(pilotId, startDate, endDate, page = 1, recor
     ...(endDate ? { endDate } : {}),
   };
 
-  const { data: activity } = await request({ url, params });
+  const { data: activity } = await axios.get(url, params);
 
   recordsReturned += activity.activity.length;
 
@@ -187,7 +188,7 @@ export function formatActivityData(activityData) {
 }
 
 export async function fetchFormattedActivityData(pilotId, activityData, baseAPI = 'https://api.emperorshammer.org') {
-  const { data: pilotJSON } = await request({ url: `${baseAPI}/pilot/${pilotId}` });
+  const { data: pilotJSON } = await axios.get(`${baseAPI}/pilot/${pilotId}`);
   const title = `${pilotJSON.label} #${pilotJSON.PIN}`;
   const underline = "".padStart(title.length, "=");
 
