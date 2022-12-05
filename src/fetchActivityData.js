@@ -88,7 +88,7 @@ async function paginateActivityData(pilotId, startDate, endDate, page = 1, recor
     ...(endDate ? { endDate } : {}),
   };
 
-  const { data: activity } = await axios.get(url, params);
+  const { data: activity } = await axios.get(url, { params });
 
   recordsReturned += activity.activity.length;
 
