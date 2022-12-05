@@ -5,7 +5,7 @@ export async function fetchSquadronInfo(squadronId, baseAPI = 'https://api.emper
 }
 
 export async function fetchSquadronData(squadronId, baseAPI) {
-  const squadronInfo = await fetchSquadronInfo(squadronId, baseAPI);
+  const { data: squadronInfo } = await fetchSquadronInfo(squadronId, baseAPI);
 
   squadronInfo.pilots = squadronInfo.pilots.map((pilot) => ({
     ...pilot,
