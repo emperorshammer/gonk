@@ -16,6 +16,7 @@ const REGEXES = {
   IU_REMOVED: /^IU Course removed from Academic Record by the SOO\s?: \[(?<iuCourse>[^\(]+)]/,
   COURSE_PASSED: /^Course passed: (?<courseName>.*) \[(?<courseCode>[^\(]+)] - (?<courseGrade>\d+%)/,
   COURSE_ADDED_TO_RECORD: /^Course added to academic record: \[(?<courseCode>[^\(]+)] - (?<courseGrade>\d+%)/,
+  COURSE_UPDATED_IN_RECORD: /^Course updated on academic record: \[(?<courseCode>[^\(]+)] - (?<courseGrade>\d+%)/,
   CERTIFICATE_AWARDED: /^Awarded the qualification (?<certificateName>.*) from the (?<certificateSchool>.*) \(program level: (?<certificateLevel>.*)\)/,
   NEW_COMBAT_RATING: /^New Combat Rating (\(MP PvP\) rank\s)?achieved\s?: (?<rating>.*)/,
   NEW_COMPETITION: /^Submitted competition approved\s?: ID# (?<competitionId>\d+)/,
