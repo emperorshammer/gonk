@@ -45,7 +45,7 @@ const REGEXES = {
   NAME_CHANGE: /Pilot name changed\s?: (?<name>)/,
   SUBMITTED_TIMED_TEST: /Submitted answers for timed test: (?<testName>.+)/,
   UPDATED_ROSTER: /^Updated the roster information for (?<unit>.+)/, // deprecated; became UPDATED_UNIT_INFORMATION
-  CAMPAIGN_CREDIT: /^Received campaign participation credit \((?<campaign>.+)\)( and medal awarded: (?<medalShorthand>.+))?/,
+  CAMPAIGN_CREDIT: /^Received campaign participation credit for campaign \((?<campaign>.+)\)( and medal awarded: (?<medalShorthand>.+))?/,
 };
 
 function removeTags(str) {
